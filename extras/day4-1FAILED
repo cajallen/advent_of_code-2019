@@ -1,0 +1,50 @@
+def count_rest(num, left, _min, _max, check):
+	if left == 1:
+		return _max[-left] - max(_min[-left], num)
+	
+	if (check == "N"):
+		_sum = 0
+		for i in range(num, 10):
+			_sum += count_rest(i, left-1, _min, _max, "N")
+		return _sum
+	
+	if (check == "B"):
+		_sum = 0
+		
+		if (num == _min[-left] and num == _max[-left]):
+			for i in range(num, 10):
+				_sum += count_rest(i, left-1, _min, _max, "B")
+			return _sum
+		elif (num == _min[-left]):
+			for i in range(num, 10):
+				_sum += count_rest(i, left-1, _min, _max, "L")
+			return _sum
+		elif (num == _max[-left]):
+			for i in range(num, _max[-left] + 1):
+				_sum += count_rest(i, left-1, _min, _max, "R")
+			return _sum
+		else:
+			for i in range(num, 10):
+				_sum += count_rest(i, left-1, _min, _max, "N")
+			return _sum
+		
+	if (check == "L"):
+		if (num == _min[-left]):
+			for i in range(_min[-left], 10):
+				_sum += count_rest(i, left-1, _min, _max, "L")
+			return _sum
+		else:
+			for i in range(num, 10):
+				_sum += count_rest(i, left-1, _min, _max, "N")
+			return _sum
+	
+	if (check == "R"):
+		if (num == _max[-left]):
+			for i in range(num, _max[-left] + 1):
+				_sum += count_rest(i, left-1, _min, _max, "R")
+			return _sum
+		else:
+			for i in range(num, 10):
+				_sum += count_rest(i, left-1, _min, _max, "N")
+			return _sum
+print(count_nums(136818, 685979)) #expects 1919
