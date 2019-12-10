@@ -1,4 +1,6 @@
+import timeit
 
+mycode = """
 planets = {
 	"MAIN": {
 		#sub planets are ALL subplanets
@@ -61,19 +63,31 @@ def write_planets(file_name):
 			add_planet(rl[0].strip(), rl[1].strip())
 			rl = input_file.readline()
 
-def init_count_orbits():
+def find_path_to_orbitee_of(planet):
+	path = []
+	current = "MAIN"
+	while planet not in planets[current]["dir"]:
+		for child in planets[current]["dir"]:
+			if planet in planets[child]["sub"] or planet == child:
+				current = child
+				break
+		path.append(current)
+	return path
+
+def find_path_between(planet1, planet2):
 	write_planets("day6_input.txt")
-	
-	#removes root node counts
-	for planet in planets["MAIN"]["dir"]:
-		planets.pop(planet)
-	planets.pop("MAIN")
-	
-	#sums sub trees
+	path_to_you = find_path_to_orbitee_of(planet1) 
+	path_to_santa = find_path_to_orbitee_of(planet2)
+
 	total = 0
-	for planet in planets:
-		total += len(planets[planet]["sub"]) + 1
-	
+	for i in range(len(path_to_you)):
+		if path_to_you[i] != path_to_santa[i % len(path_to_santa)]:
+			total += 1
+	for i in range(len(path_to_santa)):
+		if path_to_you[i % len(path_to_you)] != path_to_santa[i]:
+			total += 1
 	return total
 
-print(init_count_orbits())
+find_path_between("YOU", "SAN")"""
+
+print (timeit.timeit(stmt = mycode, number = 100))

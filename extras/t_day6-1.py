@@ -1,5 +1,6 @@
+import timeit
 
-planets = {
+mycode = """planets = {
 	"MAIN": {
 		#sub planets are ALL subplanets
 		"dir": [],
@@ -76,4 +77,6 @@ def init_count_orbits():
 	
 	return total
 
-print(init_count_orbits())
+print(init_count_orbits())"""
+
+print (timeit.timeit(stmt = mycode, number = 100))

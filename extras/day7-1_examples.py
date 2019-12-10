@@ -111,4 +111,9 @@ def iterate_thruster_sequences(opcode):
 						highest = [output, [nums.pop(x1), nums.pop(x2), nums.pop(x3), nums.pop(x4), nums[0]]]
 	return highest
 
-print(iterate_thruster_sequences(get_opcode("day7_input.txt")))
+opcode1 = get_opcode("day7_ex1.txt")
+print("ex1: ", iterate_thruster_sequences(opcode1))
+opcode2 = get_opcode("day7_ex2.txt")
+print("ex2: ", iterate_thruster_sequences(opcode2))
+opcode3 = get_opcode("day7_ex3.txt")
+print("ex2: ", iterate_thruster_sequences(opcode3))

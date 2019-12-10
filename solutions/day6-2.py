@@ -53,13 +53,12 @@ def add_planet(alpha, beta):
 
 #handles text file input
 def write_planets(file_name):
-	input_file = open(file_name, "r")
-	rl = input_file.readline()
-	while rl != "":
-		rl = rl.split(")")
-		add_planet(rl[0].strip(), rl[1].strip())
+	with open(file_name, "r") as input_file:
 		rl = input_file.readline()
-	input_file.close()
+		while rl != "":
+			rl = rl.split(")")
+			add_planet(rl[0].strip(), rl[1].strip())
+			rl = input_file.readline()
 
 def find_path_to_orbitee_of(planet):
 	path = []
@@ -76,10 +75,7 @@ def find_path_between(planet1, planet2):
 	write_planets("day6_input.txt")
 	path_to_you = find_path_to_orbitee_of(planet1) 
 	path_to_santa = find_path_to_orbitee_of(planet2)
-	
-	print(path_to_you)
-	print(path_to_santa)
-	
+
 	total = 0
 	for i in range(len(path_to_you)):
 		if path_to_you[i] != path_to_santa[i % len(path_to_santa)]:
