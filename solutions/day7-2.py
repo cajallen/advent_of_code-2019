@@ -1,4 +1,3 @@
-# WIP
 def get_opcode(file_name):
 	with open(file_name, "r") as input_file:
 		input_string = input_file.read()
@@ -6,6 +5,7 @@ def get_opcode(file_name):
 
 
 def iterate_opcode(opcode, input_queue=[]):
+	# opcode position
 	i = 0
 
 	init_input = []
@@ -96,14 +96,19 @@ def iterate_opcode(opcode, input_queue=[]):
 
 
 def run_thruster_sequence(opcode, phases):
+	# this code uses iterator generators to make use of the the yield function
+	# next(generators[i]) calls the instance of iterate_opcode(), and runs it until the yield function is reached, then pauses the instance, and resumes the code here
 	generators = []
 	inputs = []
 	inputs += [[phases[0], 0]]
 	generators.append(iterate_opcode(opcode, inputs[0]))
+	
+	#transfers the phase inputs into the generator queues
 	for i in range(1, 5):
 		inputs.append([phases[i]])
 		generators.append(iterate_opcode(opcode.copy(), inputs[i]))
 
+	#loop unroll, because of the phase inputs
 	for i in range(len(generators)):
 		inputs[(i + 1) % len(inputs)].append(next(generators[i]))
 	# the exit condition is when the 5th opcode has an item added to it without using the previous output
@@ -113,7 +118,7 @@ def run_thruster_sequence(opcode, phases):
 
 	return inputs[0][0]
 
-
+# iterates through potential phase sequences, finds the highest output
 def iterate_thruster_sequences(opcode):
 	highest = [0, [0, 0, 0, 0, 0]]
 	for x1 in range(5):
