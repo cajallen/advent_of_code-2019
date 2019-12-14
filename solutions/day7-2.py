@@ -3,12 +3,11 @@ def get_opcode(file_name):
 		input_string = input_file.read()
 		return list(map(int, input_string.split(",")))
 
-
 def iterate_opcode(opcode, input_queue=[]):
 	# opcode position
 	i = 0
+	base = 0
 
-	init_input = []
 	while True:
 		operation = str(opcode[i]).rjust(5, '0')
 
