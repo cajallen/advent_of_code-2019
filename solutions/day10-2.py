@@ -18,48 +18,28 @@ def get_meteor_list(file_name):
 
 
 def get_map(meteor_list):
-	map = [[0] * 34 for x in range(34)]
+	map = [[False] * 34 for x in range(34)]
 	for meteor in meteor_list:
-		map[meteor.y][meteor.x] = 1
+		map[meteor.y][meteor.x] = True
 	return map
 
 # function to visualize the meteor field
 def print_map(map, pos=None):
 	for y in range(len(map)):
 		for x in range(len(map[y])):
-			if pos is not None and pos == Vector(x, y):
-				print('@', end=' ')
-			elif map[y][x] == 0:
-				print(" ", end=' ')
-			elif map[y][x] == 1:
-				print("o", end=' ')
-			elif map[y][x] == 2:
-				print("+", end=' ')
-			elif map[y][x] == 3:
-				print("#", end=' ')
+			#if pos is not None and pos == Vector(x, y):
+			#	print('@', end=' ')
+			#elif map[y][x] == False:
+			#	print('.', end=' ')
+			#elif map[y][x] == 200:
+			#	print('x', end = ' ')
+			#else:
+			#	print('o', end=' ')
+			if pos == Vector(x, y):
+				print("#####", end=' ')
+			else:
+				print(str(map[y][x]).rjust(5), end=' ')
 		print('')
-
-# writes to the map to 
-def write_farey(meteor_map, pos):
-	map = [x for x in meteor_map]
-	for i in range(1, 5):
-		farey_size = 0
-		if i == 1:
-			farey_size = max(len(map[0]) - pos.x, pos.y, 1)
-		if i == 2:
-			farey_size = max(len(map[0]) - pos.x, len(map) - pos.y, 1)
-		if i == 3:
-			farey_size = max(pos.x, len(map) - pos.y, 1)
-		if i == 4:
-			farey_size = max(pos.x, pos.y, 1)
-
-		farey = get_vectors(farey_size, i)
-		for dir in farey:
-			x = pos.x + dir.x
-			y = pos.y + dir.y
-			if -1 < x < len(map[0]) and -1 < y < len(map):
-				map[y][x] += 2
-	return map
 
 # returns the farey sequence (simplified vector pairs in rotational sequence) from 0,1 to 1,0
 def get_farey(n):
@@ -96,8 +76,7 @@ def get_vectors(n, quad):
 		return [Vector(xsine * vec.y, ysine * vec.x) for vec in farey]
 
 
-# edits the 1st input
-def test_quadrant(meteor_map, quad, pos):
+def laser_quadrant(meteor_map, quad, pos, count):
 	farey_size = 0
 	if quad == 1:
 		farey_size = max(len(meteor_map[0]) - pos.x, pos.y, 1)
@@ -109,37 +88,31 @@ def test_quadrant(meteor_map, quad, pos):
 		farey_size = max(pos.x, pos.y, 1)
 
 	vectors = get_vectors(farey_size, quad)
-	count = 0
 	for vec in vectors:
 		x = pos.x + vec.x
 		y = pos.y + vec.y
 
 		while -1 < x < len(meteor_map[0]) and -1 < y < len(meteor_map):
-			if meteor_map[y][x] == 1:
+			if meteor_map[y][x]:
+				if count == 200:
+					print(Vector(x,y))
+				meteor_map[y][x] = count
 				count += 1
 				break
 			x += vec.x
 			y += vec.y
 	return count
+	
 
-
-def count_los(meteor_map, meteor):
-	count = 0
-	for i in range(1, 5):
-		count += test_quadrant(meteor_map, i, meteor)
-	return count
-
-
-def iterate_meteors(file_name):
+def iterate_laser(file_name, pos):
 	meteor_list = get_meteor_list(file_name)
 	meteor_map = get_map(meteor_list)
-	largest = (0, None)
-	for meteor in meteor_list:
-		in_los = count_los(meteor_map, meteor)
-		if in_los > largest[0]:
-			largest = (in_los, meteor)
-	print_map(write_farey(meteor_map, largest[1]))
-	return largest
+	count = 1
+	while count < 200:
+		for i in range(1, 5):
+			count = laser_quadrant(meteor_map, i, pos, count)
+
+	print_map(meteor_map, pos)
 
 
-print(iterate_meteors("day10_input.txt"))
+iterate_laser("day10_input.txt", Vector(23,20))
