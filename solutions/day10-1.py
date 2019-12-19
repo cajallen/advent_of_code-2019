@@ -1,6 +1,10 @@
 from math import floor
 from vector import Vector
 
+# this solution uses the farey sequence to generate directions in O(n) time, there is slight waste given that it generates a square of vectors for a rectangular area. 
+# the farey sequence generates the fractions from 0 to 1 in order of size, for example for n = 3, it would be 0/1 -> 1/3 -> 1/2 -> 2/3 -> 1/1
+# these fractions can be used as vectors, where the direction is arctan of the fraction (not that we need that). funnily enough, we count planets in almost the same exact
+# way as we destroy them. 
 
 def get_string(file_name):
 	with open(file_name, "r") as input_file:
@@ -18,6 +22,7 @@ def get_meteor_list(file_name):
 
 
 def get_map(meteor_list):
+	# magic numbers, i do not like but idk how to fix
 	map = [[0] * 34 for x in range(34)]
 	for meteor in meteor_list:
 		map[meteor.y][meteor.x] = 1
@@ -39,7 +44,6 @@ def print_map(map, pos=None):
 				print("#", end=' ')
 		print('')
 
-# writes to the map to 
 def write_farey(meteor_map, pos):
 	map = [x for x in meteor_map]
 	for i in range(1, 5):
@@ -61,7 +65,7 @@ def write_farey(meteor_map, pos):
 				map[y][x] += 2
 	return map
 
-# returns the farey sequence (simplified vector pairs in rotational sequence) from 0,1 to 1,0
+# returns the farey sequence (simplified vectors in rotational sequence) from 0,1 to 1,0
 def get_farey(n):
 	x = 0
 	y = 0
@@ -82,7 +86,6 @@ def get_farey(n):
 		vectors += [Vector(x, y)]
 	return vectors + [Vector(vec.y, vec.x) for vec in vectors[-2:0:-1]]
 
-
 # rotates the farey sequence depending on which quadrant we want. this will always go clockwise.
 def get_vectors(n, quad):
 	quads = [Vector(1, -1), Vector(1, 1), Vector(-1, 1), Vector(-1, -1)]
@@ -97,7 +100,7 @@ def get_vectors(n, quad):
 
 
 # edits the 1st input
-def test_quadrant(meteor_map, quad, pos):
+def count_los_quadrant(meteor_map, quad, pos):
 	farey_size = 0
 	if quad == 1:
 		farey_size = max(len(meteor_map[0]) - pos.x, pos.y, 1)
@@ -126,7 +129,7 @@ def test_quadrant(meteor_map, quad, pos):
 def count_los(meteor_map, meteor):
 	count = 0
 	for i in range(1, 5):
-		count += test_quadrant(meteor_map, i, meteor)
+		count += count_los_quadrant(meteor_map, i, meteor)
 	return count
 
 

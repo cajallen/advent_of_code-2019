@@ -1,5 +1,7 @@
 from math import gcd
 
+# this old solution iterates through each meteor, simplifies it as much as possible (using gcd), and counts unique simplified vectors
+
 class Vector:
 	def __init__(self, x, y):
 		self.x = x

@@ -27,18 +27,14 @@ def get_map(meteor_list):
 def print_map(map, pos=None):
 	for y in range(len(map)):
 		for x in range(len(map[y])):
-			#if pos is not None and pos == Vector(x, y):
-			#	print('@', end=' ')
-			#elif map[y][x] == False:
-			#	print('.', end=' ')
-			#elif map[y][x] == 200:
-			#	print('x', end = ' ')
-			#else:
-			#	print('o', end=' ')
-			if pos == Vector(x, y):
-				print("#####", end=' ')
+			if pos is not None and pos == Vector(x, y):
+				print('@', end=' ')
+			elif map[y][x] == False:
+				print(' ', end=' ')
+			elif map[y][x] == 200:
+				print('x', end = ' ')
 			else:
-				print(str(map[y][x]).rjust(5), end=' ')
+				print('o', end=' ')
 		print('')
 
 # returns the farey sequence (simplified vector pairs in rotational sequence) from 0,1 to 1,0
@@ -111,7 +107,6 @@ def iterate_laser(file_name, pos):
 	while count < 200:
 		for i in range(1, 5):
 			count = laser_quadrant(meteor_map, i, pos, count)
-
 	print_map(meteor_map, pos)
 
 

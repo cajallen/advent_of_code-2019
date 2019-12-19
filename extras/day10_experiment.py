@@ -2,6 +2,8 @@ from math import gcd
 from time import perf_counter
 from copy import deepcopy
 
+# this was initally an experiment to try recording the meteors to a meteor map, looping through the possible vectors, then counting raymarch collisions. 
+# this idea is how i rewrote the problem
 
 def get_string(file_name):
 	with open(file_name, "r") as input_file:

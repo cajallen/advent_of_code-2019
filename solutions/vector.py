@@ -14,3 +14,6 @@ class Vector:
 	
 	def __sub__(self, vec):
 		return Vector(self.x - vec.x, self.y - vec.y)
+
+	def __hash__(self):
+		return hash((self.x, self.y))
