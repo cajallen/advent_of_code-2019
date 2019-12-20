@@ -10,7 +10,7 @@ class Opcode:
 	# list: input_queue
 	# gen: gen
 	
-	def __init__(self, file_name, input_queue):
+	def __init__(self, file_name, input_queue = []):
 		self.opcode = get_opcode(file_name)
 		self.inputs = input_queue
 		self.i = 0
@@ -78,6 +78,7 @@ class Opcode:
 	
 			# input
 			elif instruction == "03":
+				yield -2
 				if len(self.inputs) > 0:
 					self.set_element(pos1, self.inputs.pop(0))
 				else:
