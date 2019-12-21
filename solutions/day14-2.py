@@ -31,13 +31,19 @@ class Vendor:
 		if item == "ORE":
 			return amount
 		
-		if amount <= self.inventory.get(item, 0):
-			self.inventory[item] = self.inventory.get(item, 0) - amount
-			return 0
+		reactions = 0
+		if item == "FUEL":
+			self.inventory[item] = self.inventory.get(item, 0) + amount
+			reactions = ceil(amount / self.trades[item]["amount"])
 		
-		amount -= self.inventory.get(item, 0)
-		reactions = ceil(amount / self.trades[item]["amount"])
-		self.inventory[item] = (reactions * self.trades[item]["amount"]) - amount
+		else:
+			if amount <= self.inventory.get(item, 0):
+				self.inventory[item] = self.inventory.get(item, 0) - amount
+				return 0
+			
+			amount -= self.inventory.get(item, 0)
+			reactions = ceil(amount / self.trades[item]["amount"])
+			self.inventory[item] = (reactions * self.trades[item]["amount"]) - amount
 		
 		total = 0
 		for subcomponent in self.trades[item]["returns"]:
@@ -45,5 +51,13 @@ class Vendor:
 		return total
 
 
+max_cost = 483766
 vendor = Vendor("day14_input.txt")
-print(vendor.buy("FUEL", 1))
+bank = 1000000000000
+while True:
+	bank -= vendor.buy("FUEL", max(int(bank/max_cost), 1))
+	print("fuel", vendor.inventory["FUEL"], "  bank", bank)
+	if bank < 0:
+		vendor.inventory["FUEL"] -= 1
+		break
+print(vendor.inventory["FUEL"])
