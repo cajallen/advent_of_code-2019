@@ -17,6 +17,10 @@ class Vector:
 
 	def __hash__(self):
 		return hash((self.x, self.y))
+	
+	def get_h(self, vec):
+		between = vec - self
+		return abs(between.x) + abs(between.y)
 
 class Vector3:
 	def __init__(self, x, y, z):
